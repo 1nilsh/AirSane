@@ -357,12 +357,12 @@ Server::run()
                 << std::endl;
       std::clog << "uuid: " << pScanner->uuid() << std::endl;
 
-      chooseUniquePublishedName(pScanner.get());
-
       if (!pScanner->initWithOptions(optionsfile)) {
         std::clog << "error: " << pScanner->error() << std::endl;
       }
       else {
+        // options may override the published name
+        chooseUniquePublishedName(pScanner.get());
         if (scannerCount++ == 0 && mCompatiblepath)
             pScanner->setUri("/eSCL");
         else
@@ -485,7 +485,10 @@ Server::buildMdnsService(const Scanner* pScanner)
     s += "," + f;
   if (!s.empty())
     pService->setTxt("pdl", s.substr(1));
-  pService->setTxt("ty", pScanner->makeAndModel());
+  if (pScanner->customName().empty())
+    pService->setTxt("ty", pScanner->makeAndModel());
+  else
+    pService->setTxt("ty", pScanner->customName());
   if (pScanner->note().empty())
     pService->setTxt("note", mHostname);
   else

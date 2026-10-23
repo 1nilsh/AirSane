@@ -59,6 +59,18 @@ xmlEscape(const std::string& in)
   return out;
 }
 
+// truncate to a byte limit without splitting a UTF-8 character
+std::string
+truncateUtf8(const std::string& in, size_t maxBytes)
+{
+  if (in.length() <= maxBytes)
+    return in;
+  size_t len = maxBytes;
+  while (len > 0 && (in[len] & 0xc0) == 0x80)
+    --len;
+  return in.substr(0, len);
+}
+
 std::string
 colorMode(const std::string& colorSpace, int bitDepth)
 {
@@ -481,6 +493,11 @@ Scanner::Private::init2(const OptionsFile& optionsfile)
   // Apply device options first so any changes to dependent parameters
   // are detected during initialization.
   mDeviceOptions = optionsfile.scannerOptions(p);
+  if (!mDeviceOptions.name.empty()) {
+    // mDNS service instance names are limited to 63 bytes
+    mDeviceOptions.name = truncateUtf8(mDeviceOptions.name, 63);
+    mPublishedName = mDeviceOptions.name;
+  }
   for (const auto &option : mDeviceOptions.sane_options) {
     if (opt[option.first].is_null()) {
       std::clog << "SANE option specified in options file: " << option.first << ", does not exist" << std::endl;
@@ -769,6 +786,12 @@ const std::string&
 Scanner::note() const
 {
   return p->mDeviceOptions.note;
+}
+
+const std::string&
+Scanner::customName() const
+{
+  return p->mDeviceOptions.name;
 }
 
 void
