@@ -59,6 +59,7 @@ public:
 
   const std::string& iconFile() const;
   const std::string& note() const;
+  const std::string& customName() const;
   
   const std::vector<std::string>& documentFormats() const;
   const std::vector<std::string>& txtColorSpaces() const;

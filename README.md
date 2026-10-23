@@ -239,6 +239,14 @@ If pixel dimensions are not powers of two, the image will not be accepted by mac
 A string that appears in the `note` field of the mDNS announcement. This should be an indication where the scanner is located,
 such as "Living Room" or "Office." If no location is given in the options file, this defaults to the host name of the machine
 that runs airsaned.
+##### name
+The name under which the scanner is announced via mDNS, and which is shown by clients and in the web interface.
+It also appears in the `ty` field of the mDNS announcement.
+If no name is given in the options file, this defaults to the scanner's make and model as reported by the SANE backend.
+Names longer than 63 bytes are truncated. If several scanners end up with the same name, a number is appended,
+e.g. "Office Scanner (2)".
+The scanner's UUID is always derived from its make and model, so changing its name does not make it appear as a new device
+to clients.
 
 #### Example options.conf file
 ```
@@ -260,6 +268,7 @@ synthesize-gray yes
 device Canon LiDE 60
 icon CanonLiDE60.png
 location Living Room
+name Living Room Scanner
 calibration-file /home/simul/some path with spaces/canon-lide-60.cal
 ```
 

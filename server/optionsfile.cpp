@@ -97,6 +97,8 @@ OptionsFile::scannerOptions(const Scanner* pScanner) const
     }
     else if (option.first == "note" || option.first == "location")
       processedOptions.note = option.second;
+    else if (option.first == "name")
+      processedOptions.name = option.second;
     else if (option.first == "gray-gamma")
       processedOptions.gray_gamma = ::atof(option.second.c_str());
     else if (option.first == "color-gamma")

@@ -37,7 +37,7 @@ public:
   typedef std::vector<std::pair<std::string, std::string>> RawOptions;
   struct Options
   {
-    std::string icon, note;
+    std::string icon, note, name;
     double gray_gamma = 1.0, color_gamma = 1.0;
     bool synthesize_gray = false;
     RawOptions sane_options;
